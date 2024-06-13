@@ -13,6 +13,16 @@ document.addEventListener('DOMContentLoaded', function () {
     messages.appendChild(messageElement);
   });
 
+  socket.on('buildHistory', (history) => {
+    const messages = document.getElementById('messages');
+
+    history.forEach(element => {
+      const messageElement = document.createElement('li');
+      messageElement.textContent = `Cliente ${element.clientId}: ${element.message}`;
+      messages.appendChild(messageElement);
+    });
+  });
+
   document.getElementById('sendButton').addEventListener('click', function () {
     const messageInput = document.getElementById('messageInput');
     const message = messageInput.value;

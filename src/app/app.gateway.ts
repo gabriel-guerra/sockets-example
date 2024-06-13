@@ -18,14 +18,16 @@ import { Server, Socket } from 'socket.io';
 })
 export class AppGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
-  @WebSocketServer() server: Server;
-  private logger: Logger = new Logger('AppGateway');
-
-  @SubscribeMessage('msgToServer')
-  handleMessage(client: Socket, payload: string): void {
+  {
+    private history: {message: string, clientId: string}[] = [];
+    @WebSocketServer() server: Server;
+    private logger: Logger = new Logger('AppGateway');
+    
+    @SubscribeMessage('msgToServer')
+    handleMessage(client: Socket, payload: string): void {
     console.log('msgToServer', payload);
     this.server.emit('msgToClient', payload, client.id);
+    this.history.push({message: payload, clientId: client.id});
   }
 
   afterInit(server: Server) {
@@ -34,6 +36,7 @@ export class AppGateway
 
   handleConnection(client: Socket) {
     this.logger.log(`Client connected: ${client.id}`);
+    this.server.emit('buildHistory', history);
   }
 
   handleDisconnect(client: Socket) {

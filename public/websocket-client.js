@@ -16,11 +16,13 @@ document.addEventListener('DOMContentLoaded', function () {
   socket.on('buildHistory', (history) => {
     const messages = document.getElementById('messages');
 
-    history.forEach(element => {
-      const messageElement = document.createElement('li');
-      messageElement.textContent = `Cliente ${element.clientId}: ${element.message}`;
-      messages.appendChild(messageElement);
-    });
+    if (messages.children.length === 0){
+      history.forEach(element => {
+        const messageElement = document.createElement('li');
+        messageElement.textContent = `Cliente ${element.clientId}: ${element.message}`;
+        messages.appendChild(messageElement);
+      });
+    }
   });
 
   document.getElementById('sendButton').addEventListener('click', function () {
